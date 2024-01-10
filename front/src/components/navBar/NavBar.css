@@ -1,0 +1,13 @@
+.logo {
+    width: 70px;
+    border-radius: 20px;
+}
+
+.navbar {
+    margin-bottom: 2rem;
+    padding: 10px;
+}
+
+.btn-border {
+    margin-top: 10px;
+}
