@@ -46,7 +46,9 @@ export const userLogin = async (req, res) => {
         if (userFound && passwordMatch) {
             // generamos el token JWT
             const token = generateToken(userFound._id)
-            res.status(200).json({ message: `Welcome, ${userFound.name}` });
+            // res.status(200).json({ message: `Welcome, ${userFound.name}` });
+            //Devolvemos el toke al front (Paso 6)
+            res.status(200).json({ token: generateToken(user._id) });
         } else {
             res.status(401).json({ error: 'Incorrect credentials' });
         }
