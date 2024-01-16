@@ -3,6 +3,7 @@ import path from 'path'
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 
+//Generacion clave secreta (Paso 3)
 export const generateAndRenewKey = () => {
 
     // Establezco la ruta al archivo .env
@@ -15,7 +16,6 @@ export const generateAndRenewKey = () => {
     const newKey = crypto.randomBytes(32).toString('hex');
 
     process.env.SECRET_KEY = newKey;
-    console.log(process.env.SECRET_KEY);
 
     // Modificar el contenido según sea necesario
     // const updatedEnvContent = SECRET_KEY=`${newKey}`;
