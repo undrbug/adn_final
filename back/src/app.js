@@ -23,6 +23,9 @@ db();
 //Cada vez que inicio genero una SECRET_KEY
 generateAndRenewKey();
 
+// Esta línea permite servir archivos estáticos desde la ruta '/images'
+app.use('/images', express.static('public/images/uploads'));
+
 app.get('/', (req, res) => {
     res.send('¡Hola desde mi primera aplicación Node.js!');
 });
