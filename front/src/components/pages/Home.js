@@ -15,6 +15,10 @@ const Home = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [movieToDelete, setMovieToDelete] = useState(null);
 
+  //Manejo de errores en la carga de las peliculas
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   //Metodo para traer todas las peliculas
   const getMovies = async () => {
     try {
@@ -30,8 +34,15 @@ const Home = () => {
   }
 
   useEffect(() => {
-    getMovies().then(movies => setMovies(movies))
-      .catch(error => console.error(error))
+    getMovies().then(movies => {
+      setMovies(movies)
+      setLoading(false)
+    })
+      .catch(error => {
+        console.error('Error fetching movies:', error);
+        setError('There was an error loading the movies.');
+        setLoading(false);
+      })
   })
 
   //Capturo lo que se va ingresando en el modal "Agregar pelicula"
@@ -82,7 +93,7 @@ const Home = () => {
       const addedMovie = await res.json();
       setMovies((prevMovie) => [...prevMovie, addedMovie]);
       alert('Film added successfully!');
-      handleCloseModal(); //Cerramos el modal despues de agregar la pelicula
+      handleCloseModal(); //Cierro el modal despues de agregar la pelicula
 
     } catch (error) {
       console.error('Error adding movie', error);
@@ -156,7 +167,11 @@ const Home = () => {
               <div className="card-body">
 
                 <h5 className="title">Más Vistas</h5>
-
+                  {loading ? (
+                    <p>Cargando peliculas</p>
+                  ): error ? (
+                    <p>{error}</p>
+                  ) : movies ? (
                 <div className="container">
                   <div className="row">
                     {movies.map((movie) => (
@@ -186,7 +201,9 @@ const Home = () => {
                     ))}
                   </div>
                 </div>
-
+                  ) : (
+                    <h1>Todavia nada por aqui</h1>
+                    )}
                 {/* Contenido de las películas más vistas */}
               </div>
             </div>
