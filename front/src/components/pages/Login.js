@@ -31,9 +31,6 @@ const Login = () => {
       return;
     }
 
-    //para prueba
-    console.log("Username:", user);
-    console.log("Password:", password);
     try {
       const response = await fetch(`http://localhost:3000/login`, {
         method: 'POST',
@@ -112,9 +109,6 @@ const Login = () => {
       <RegisterModal
         showModal={showModal}
         handleCloseModal={handleCloseModal}
-        // newUser={newUser}
-        // handleRegister={handleRegister}
-        // ...otros props necesarios
       />      
       <div className="dropdown-divider"></div>
     </div>

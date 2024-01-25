@@ -128,8 +128,8 @@ function RegisterModal({
             });
             // console.log('Respuesta del servidor:', await response.text());
             if (response.ok) {
-                // Tengo que redirigir al home
-                console.log('Usuario registrado exitosamente');
+                // mensaje de registro exitoso y redirigir al login 
+                // window.location = '/login';
             } else {
                 const errorData = await response.json();
                 console.error('Error al registrar el usuario:', errorData.details || 'Error desconocido');
