@@ -19,6 +19,9 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  //Estado para filtro de pelicula
+  const [searchTerm, setSearchTerm] = useState('');
+
   //Metodo para traer todas las peliculas
   const getMovies = async () => {
     try {
@@ -27,23 +30,38 @@ const Home = () => {
         throw new Error('The request was not successful');
       }
       const movies = await response.json()
-      return movies;
+
+      // filtro las películas según la búsqueda
+      const filteredMovies = movies.filter((movie) =>
+        movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+      setMovies(filteredMovies)
+      setLoading(false);
+
+      // return movies;
     } catch (error) {
       console.error('something went wrong:', error);
+      setError('There was an error loading the movies.');
+      setLoading(false);
     }
   }
 
+  // useEffect(() => {
+  //   getMovies().then(movies => {
+  //     setMovies(movies)
+  //     setLoading(false)
+  //   })
+  //     .catch(error => {
+  //       console.error('Error fetching movies:', error);
+  //       setError('There was an error loading the movies.');
+  //       setLoading(false);
+  //     })
+  // })
+
   useEffect(() => {
-    getMovies().then(movies => {
-      setMovies(movies)
-      setLoading(false)
-    })
-      .catch(error => {
-        console.error('Error fetching movies:', error);
-        setError('There was an error loading the movies.');
-        setLoading(false);
-      })
-  })
+    getMovies();
+  }, [searchTerm]);
 
   //Capturo lo que se va ingresando en el modal "Agregar pelicula"
   const handleInputChange = (event) => {
@@ -143,11 +161,25 @@ const Home = () => {
     setShowModal(true); // Abrir el modal
   };
 
+  const handleSearch = () => {
+    // actializa la búsqueda y vuelve a obtener las películas
+    getMovies();
+  };
+
   return (
     <>
       <div className="container mt-3">
-        <h2 className="mb-4">TheMovies!</h2>
 
+        {/* Input para la búsqueda */}
+        <input
+          type="text"
+          className="form-control-sm"
+          placeholder="Buscar películas"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        <h2 className="mb-4">TheMovies!</h2>
         <div className="row">
 
           <div className="col-10 mx-auto">
@@ -167,43 +199,43 @@ const Home = () => {
               <div className="card-body">
 
                 <h5 className="title">Más Vistas</h5>
-                  {loading ? (
-                    <p>Cargando peliculas</p>
-                  ): error ? (
-                    <p>{error}</p>
-                  ) : movies ? (
-                <div className="container">
-                  <div className="row">
-                    {movies.map((movie) => (
-                      <div key={movie._id} className="col-md-4 mb-4">
-                        <div className="card">
-                          <img
-                            src={`http://localhost:3000/images/${movie.image}`}
-                            className="card-img-top"
-                            alt={movie.title} />
-                          <div className="card-body">
-                            <h5 className="card-title">{movie.title}</h5>
-                            <p className="card-text">{movie.description}</p>
-                            <div className='d-flex gap-2 mb-3'>
-                              <button className="btn btn-primary">Ver más...</button>
-                              <button className="btn btn-danger"
-                                onClick={() => handleOpenDeleteModal(movie._id)}
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash" viewBox="0 0 16 16">
-                                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                </svg></button>
+                {loading ? (
+                  <p>Cargando peliculas</p>
+                ) : error ? (
+                  <p>{error}</p>
+                ) : movies ? (
+                  <div className="container">
+                    <div className="row">
+                      {movies.map((movie) => (
+                        <div key={movie._id} className="col-md-4 mb-4">
+                          <div className="card">
+                            <img
+                              src={`http://localhost:3000/images/${movie.image}`}
+                              className="card-img-top"
+                              alt={movie.title} />
+                            <div className="card-body">
+                              <h5 className="card-title">{movie.title}</h5>
+                              <p className="card-text">{movie.description}</p>
+                              <div className='d-flex gap-2 mb-3'>
+                                <button className="btn btn-primary">Ver más...</button>
+                                <button className="btn btn-danger"
+                                  onClick={() => handleOpenDeleteModal(movie._id)}
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                  </svg></button>
 
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-                  ) : (
-                    <h1>Todavia nada por aqui</h1>
-                    )}
+                ) : (
+                  <h1>Todavia nada por aqui</h1>
+                )}
                 {/* Contenido de las películas más vistas */}
               </div>
             </div>
@@ -219,6 +251,7 @@ const Home = () => {
             </button>
           </div>
           <div className="col">
+            {/* //Todavia sin funciones */}
             <button
               type="button" className="btn btn-danger">
               Eliminar Película
