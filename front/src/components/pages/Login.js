@@ -1,11 +1,14 @@
 import React, { useState, useRef } from 'react';
 import './Login.css'
 import RegisterModal from './RegisterModal';
+import { useAuth } from '../../utils/AuthContext.js';
 
-const Login = () => {
 
-  const [user, setUser] = useState("");
+const Login = () => {  
+  const [user, setUser] = useState("");  
   const [password, setPassword] = useState("");
+  
+  const { login } = useAuth();
   
   const [showModal, setShowModal] = useState(false)
 
@@ -27,7 +30,6 @@ const Login = () => {
       } else {
         passwordRef.current.focus();
       }
-
       return;
     }
 
@@ -41,12 +43,13 @@ const Login = () => {
       });
 
       if (response.ok) {
-        const { token } = await response.json();
-        console.log(`El token es: ${token}`);
-
+        const data = await response.json();
+        login(data.token)
+        window.location = '/';
       } else {
         const errorData = await response.json();
         console.error('Error en el inicio de sesión:', errorData.error);
+        alert('Credenciales incorrectas')
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);

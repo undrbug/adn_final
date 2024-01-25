@@ -1,8 +1,25 @@
 import { Link } from 'react-router-dom';
 import './NavBar.css';
+import { useAuth } from '../../utils/AuthContext.js';
 
 const NavBar = () => {
+  const { token, logout } = useAuth();
 
+  const renderAuthButton = () => {
+    if (token) {
+      return (
+        <button onClick={logout} className="nav-link">
+          Disconnect
+        </button>
+      );
+    } else {
+      return (
+        <Link to="/login" className="nav-link">
+          Login
+        </Link>
+      );
+    }
+  };
   return (
     <nav className="navbar bg-dark navbar-expand-lg border-bottom" data-bs-theme="dark">
       <div className="container-fluid">
@@ -24,10 +41,10 @@ const NavBar = () => {
               <Link className="nav-link " to='/contact'>Contact</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link " to='/login'>Login</Link>
+              {renderAuthButton()}
             </li>
           </ul>
-          
+
         </div>
       </div>
     </nav>
