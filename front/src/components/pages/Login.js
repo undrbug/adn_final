@@ -1,26 +1,17 @@
 import React, { useState, useRef } from 'react';
 import './Login.css'
+import RegisterModal from './RegisterModal';
 
 const Login = () => {
 
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
-  const [newUser, setNewUser] = useState({
-    name: "",
-    lastName:"",
-    user:"",
-    password:"",
-    mail:"",
-  })
-
+  
   const [showModal, setShowModal] = useState(false)
 
-  //referencia para el focus()
-  //Inicio de sesion
+  //referencia para el focus()para el inicio de sesion
   const userRef = useRef(null);
   const passwordRef = useRef(null);
-  //Registro
-  const nameRef = useRef(null);
 
   // Inicio de sesion
   const handleSubmit = async (event) => {
@@ -40,6 +31,7 @@ const Login = () => {
       return;
     }
 
+    //para prueba
     console.log("Username:", user);
     console.log("Password:", password);
     try {
@@ -73,12 +65,6 @@ const Login = () => {
   // Cierro el modal de registro
   const handleCloseModal = () => {
     setShowModal(false);
-  };
-
-  // Registro de usuario
-  const handleRegister = async (event) => {
-    event.preventDefault();
-    // Resto del código...
   };
 
   return (
@@ -123,77 +109,13 @@ const Login = () => {
         </div>
       </form>
 
-      <div className={`modal ${showModal ? 'show' : ''}`} tabIndex="-1" style={{ display: showModal ? 'block' : 'none' }}>
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Registro de Usuario</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleCloseModal}></button>
-            </div>
-
-            <div className="modal-body">
-              {/* Contenido del formulario de registro */}
-              <form onSubmit={handleRegister}>
-                {/* Resto del código... */}
-                <div className="mb-3">
-                  <label htmlFor="name" className="form-label">Nombre</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="name"
-                    placeholder="Nombre"
-                    // onChange={(event) => setNewUser(event.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="lastName" className="form-label">Apellido</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="lastName"
-                    placeholder="Apellido"
-                    // onChange={(event) => setNewUser(event.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="newUser" className="form-label">Usuario</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="newUser"
-                    placeholder="Usuario"
-                    // onChange={(event) => setNewUser(event.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="newUserPassword" className="form-label">Contraseña</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="newUserPassword"
-                    placeholder="Contraseña"
-                    // onChange={(event) => setPassword(event.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    placeholder="correo@deEjemplo.com"
-                    // onChange={(event) => setPassword(event.target.value)}
-                  />
-                </div>
-              </form>
-            </div>
-            <div className='modal-footer'>
-              <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={handleCloseModal}>Cerrar</button>
-              <button type="submit" className="btn btn-primary" onClick={handleRegister}>Registrase</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <RegisterModal
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        // newUser={newUser}
+        // handleRegister={handleRegister}
+        // ...otros props necesarios
+      />      
       <div className="dropdown-divider"></div>
     </div>
   )
