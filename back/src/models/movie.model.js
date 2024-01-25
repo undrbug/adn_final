@@ -1,12 +1,5 @@
 import mongoose from "mongoose";
-
-// Esquema para los comentarios
-const commentSchema = new mongoose.Schema({
-    text: {
-        type: String,
-        required: true,
-    },
-});
+import { commentSchema } from "./comment.model.js";
 
 // Esquema principal de la película
 const movieSchema = new mongoose.Schema({
@@ -22,6 +15,11 @@ const movieSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },    
     comments: [commentSchema],
 });
 

@@ -27,12 +27,13 @@ export const postMovie = async (req, res) => {
                 title: req.body.title,
                 description: req.body.description,
                 image: req.file.filename,
+                user: req.user._id,
             });
             const newMovie = movie.save();
             res.status(201).json(newMovie)
         });
     } catch (error) {
-        console.error(`Error al agregar la película: ${error.message}`);
+        console.error(`Error adding movie: ${error.message}`);
         res.status(400).json({ message: error.message });
 
     }
