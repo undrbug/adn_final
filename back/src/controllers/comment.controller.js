@@ -6,7 +6,7 @@ export const createComment = async (req, res) => {
         const { text } = req.body;
         const newComment = {
             text,
-            user: req.user._id, // asocia al usuario actual
+            user: '', // asocia al usuario actual
         };
         const movie = await Movie.findById(req.params.movieId);
 
@@ -14,7 +14,7 @@ export const createComment = async (req, res) => {
             return res.status(404).json({ error: 'Movie not found' });
         }
 
-        movie.comments.push(newComment);
+        movie.comments.push(new Comment(newComment));
         await movie.save();
 
         res.status(201).json(newComment);

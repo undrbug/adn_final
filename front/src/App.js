@@ -7,24 +7,26 @@ import Contact from './components/pages/Contact';
 import Login from './components/pages/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './utils/AuthContext.js';
+import MovieDetail from './components/movieDetail/MovieDetail.js';
 
 function App() {
   return (
     <>
-    <React.StrictMode>
+      {/* <React.StrictMode> */}
       <Router>
-      <AuthProvider>
-        <NavBar />
-        <Routes>
-          <Route path='/' exact Component={Home} />
-          <Route path='/about' Component={About} />
-          <Route path='/contact' Component={Contact} />
-          <Route path='/login' Component={Login} />
-        </Routes>
-        <Footer />
-      </AuthProvider>
+        <AuthProvider>
+          <NavBar />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/about' element={<About />} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/detail' element={<MovieDetail />} />
+          </Routes>
+          <Footer />
+        </AuthProvider>
       </Router>
-    </React.StrictMode>
+      {/* </React.StrictMode> */}
     </>
   );
 }

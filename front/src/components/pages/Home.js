@@ -1,5 +1,8 @@
 import './Home.css'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
+import MovieDetail from '../movieDetail/MovieDetail';
+
 const Home = () => {
 
   const [movies, setMovies] = useState([])
@@ -217,7 +220,10 @@ const Home = () => {
                               <h5 className="card-title">{movie.title}</h5>
                               <p className="card-text">{movie.description}</p>
                               <div className='d-flex gap-2 mb-3'>
-                                <button className="btn btn-primary">Ver más...</button>
+                                {/* <button className="btn btn-primary">Ver más...</button> */}
+                                <Link to={`/detail`} state={{id: movie._id}} className="btn btn-primary">
+                                  Ver más...
+                                </Link>
                                 <button className="btn btn-danger"
                                   onClick={() => handleOpenDeleteModal(movie._id)}
                                 >

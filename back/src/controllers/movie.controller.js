@@ -27,7 +27,7 @@ export const postMovie = async (req, res) => {
                 title: req.body.title,
                 description: req.body.description,
                 image: req.file.filename,
-                user: req.user._id,
+                user: '65b31c4fcbeb420042d54862',
             });
             const newMovie = movie.save();
             res.status(201).json(newMovie)

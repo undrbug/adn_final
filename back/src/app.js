@@ -1,6 +1,7 @@
 import express, { json } from 'express'
 import Moviesrouter from './routes/movie.route.js'
 import userRouter from './routes/user.route.js'
+import CommentRouter from './routes/comment.route.js'
 import mongoose from 'mongoose'
 import db from './db/db.js'
 import dotenv from 'dotenv'
@@ -31,7 +32,8 @@ app.get('/', (req, res) => {
 });
 
 app.use(userRouter)
-app.use(Moviesrouter);
+app.use(Moviesrouter)
+app.use(CommentRouter)
 
 // Error 404 si no existe ninguna ruta
 app.use((req, res) => {

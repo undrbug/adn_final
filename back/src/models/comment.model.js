@@ -8,10 +8,10 @@ export const commentSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
+        required: false,
     },
 });
 
-// const Comment = mongoose.model('Comment', commentSchema)
+const Comment = mongoose.model('Comment', commentSchema)
 
-// export default commentSchema
+export default Comment

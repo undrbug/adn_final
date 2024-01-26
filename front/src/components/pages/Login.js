@@ -1,14 +1,11 @@
 import React, { useState, useRef } from 'react';
 import './Login.css'
 import RegisterModal from './RegisterModal';
-import { useAuth } from '../../utils/AuthContext.js';
 
 
 const Login = () => {  
   const [user, setUser] = useState("");  
   const [password, setPassword] = useState("");
-  
-  const { login } = useAuth();
   
   const [showModal, setShowModal] = useState(false)
 
@@ -44,7 +41,7 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
-        login(data.token)
+        console.log(`que es data: ${data}`);
         window.location = '/';
       } else {
         const errorData = await response.json();
