@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Columna 1: Logo y Redes Sociales */}
           <div className="col-md-4">
             <div className="d-flex justify-content-center">
-              <img src="odin.jpg" alt="Logo de la empresa" className='logo' />
+              <img src="OdinFlix.jpeg" alt="Logo de la empresa" className='logo' />
             </div>
             <div className="social-icons mt-3 d-flex justify-content-center">
               <a href="http://facebook.es/" target="_blank" rel="noreferrer"><img width="48" height="48" src="https://img.icons8.com/color/48/facebook-new.png" alt="facebook-new" /></a>
