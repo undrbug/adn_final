@@ -100,7 +100,7 @@ const Login = () => {
             </label>
           </div>
         </div>
-        <div className='d-flex gap-2'>
+        <div className='d-flex gap-2 mb-5'>
           <button type="submit" className="btn btn-primary">Ingresar</button>
           <button type="button" className="btn btn-primary" onClick={handleOpenModal} >Registrarte</button>
         </div>

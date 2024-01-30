@@ -1,7 +1,8 @@
 import './Home.css'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import MovieDetail from '../movieDetail/MovieDetail';
+import { DotLoader } from 'react-spinners';
+import AddMovieModal from './AddMovieModal.js';
 
 const Home = () => {
 
@@ -48,23 +49,10 @@ const Home = () => {
       setError('There was an error loading the movies.');
       setLoading(false);
     }
-  }
-
-  // useEffect(() => {
-  //   getMovies().then(movies => {
-  //     setMovies(movies)
-  //     setLoading(false)
-  //   })
-  //     .catch(error => {
-  //       console.error('Error fetching movies:', error);
-  //       setError('There was an error loading the movies.');
-  //       setLoading(false);
-  //     })
-  // })
-
+  };
   useEffect(() => {
     getMovies();
-  }, [searchTerm]);
+  }, [searchTerm, getMovies]);
 
   //Capturo lo que se va ingresando en el modal "Agregar pelicula"
   const handleInputChange = (event) => {
@@ -90,8 +78,7 @@ const Home = () => {
   };
 
   //Para agregar una nueva pelicula a la bd
-  const handleAddMovie = async (event) => {
-    console.log('Antes de agregar película - newMovie.image:', newMovie.image);
+  const handleAddMovie = async (newMovie) => {
     try {
       // Valido que todos los campos obligatorios estén cargados
       if (!newMovie.title || !newMovie.description || !newMovie.image) {
@@ -120,9 +107,7 @@ const Home = () => {
       console.error('Error adding movie', error);
       alert('Error adding movie');
     }
-    console.log('Después de agregar película - newMovie.image:', newMovie.image);
   };
-
 
   //Para eliminar una pelicular de la bd
   const handleDeleteMovie = async (movieId) => {
@@ -150,23 +135,21 @@ const Home = () => {
     setShowDeleteModal(true);
   };
 
-
   const handleCloseModal = () => {
     setShowModal(false); // Cerrar el modal sin agregar película
   };
 
-  const handleOpenModal = () => {
-    setNewMovie({ // Limpiar el formulario antes de abrir el modal
+  const resetMovieForm = () => {
+    setNewMovie({
       title: '',
       description: '',
       image: null,
     });
-    setShowModal(true); // Abrir el modal
   };
 
-  const handleSearch = () => {
-    // actializa la búsqueda y vuelve a obtener las películas
-    getMovies();
+  const handleOpenModal = () => {
+    resetMovieForm();
+    setShowModal(true); // Abrir el modal
   };
 
   return (
@@ -195,15 +178,14 @@ const Home = () => {
               </div>
             </div>
           </div>
-
           <div className="col-10 mx-auto">
-
             <div>
               <div className="card-body">
-
                 <h5 className="title">Más Vistas</h5>
                 {loading ? (
-                  <p>Cargando peliculas</p>
+                  <div className="d-flex justify-content-center align-items-center vh-100">
+                    <DotLoader color={'#36D7B7'} loading={loading} />
+                  </div>
                 ) : error ? (
                   <p>{error}</p>
                 ) : movies ? (
@@ -212,16 +194,21 @@ const Home = () => {
                       {movies.map((movie) => (
                         <div key={movie._id} className="col-md-4 mb-4">
                           <div className="card">
-                            <img
-                              src={`http://localhost:3000/images/${movie.image}`}
-                              className="card-img-top"
-                              alt={movie.title} />
+                            {movie.image ? (
+                              <img
+                                src={`http://localhost:3000/images/${movie.image}`}
+                                className="card-img-top img-fluid"
+                                alt={movie.title}
+                              />
+                            ) : (
+                              <p>No hay imagen disponible</p>
+                            )}
                             <div className="card-body">
                               <h5 className="card-title">{movie.title}</h5>
                               <p className="card-text">{movie.description}</p>
                               <div className='d-flex gap-2 mb-3'>
                                 {/* <button className="btn btn-primary">Ver más...</button> */}
-                                <Link to={`/detail`} state={{id: movie._id}} className="btn btn-primary">
+                                <Link to={`/detail`} state={{ id: movie._id }} className="btn btn-primary">
                                   Ver más...
                                 </Link>
                                 <button className="btn btn-danger"
@@ -231,7 +218,6 @@ const Home = () => {
                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
                                   </svg></button>
-
                               </div>
                             </div>
                           </div>
@@ -247,7 +233,6 @@ const Home = () => {
             </div>
           </div>
         </div>
-
         <h2 className="mt-4">Agregar / Eliminar Películas</h2>
         <div className="row mb-4">
           <div className="col">
@@ -265,80 +250,12 @@ const Home = () => {
           </div>
         </div>
       </div>
-
       {/* //Modal para agregar pelicula */}
-      <div
-        className={`modal fade ${showModal ? 'show' : ''}`}
-        style={{ display: showModal ? 'block' : 'none' }}
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden={!showModal}
-      >
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Agregar Película
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                onClick={() => handleCloseModal()}
-              ></button>
-            </div>
-            <div className="modal-body">
-              {/* Contenido del formulario */}
-              <label>Título:</label>
-              <input
-                required
-                type="text"
-                className="form-control"
-                name="title"
-                value={newMovie.title}
-                onChange={handleInputChange}
-              />
-              <label>Descripción:</label>
-              <textarea
-                rows="3"
-                className="form-control"
-                name="description"
-                value={newMovie.description}
-                onChange={handleInputChange}
-              ></textarea>
-              <label>Imagen:</label>
-              <input
-                type="file"
-                accept="image/*"
-                className="form-control"
-                name="image"
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-                onClick={() => handleCloseModal()}
-              >
-                Cerrar
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-success"
-                onClick={handleAddMovie}
-              >
-                Agregar Película
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <AddMovieModal
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        handleAddMovie={handleAddMovie}
+      />
       {/* //Modal para eliminar pelicula */}
       <div
         className={`modal fade ${showDeleteModal ? 'show' : ''}`}

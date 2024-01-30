@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './NavBar.css';
 import { useAuth } from '../../utils/AuthContext.js';
 
 const NavBar = () => {
+  const location = useLocation();
   const { token, logout } = useAuth();
 
   const renderAuthButton = () => {
@@ -31,24 +32,27 @@ const NavBar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ms-auto">
-            <li className="nav-item ">
-              <Link className="nav-link active" to='/'>Home</Link>
+            <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+              <Link className="nav-link" to='/'>Home</Link>
             </li>
-            <li className="nav-item">
+            <li className={`nav-item ${location.pathname === '/about' ? 'active' : ''}`}>
               <Link className="nav-link" to='/about'>About</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link " to='/contact'>Contact</Link>
+            <li className={`nav-item ${location.pathname === '/contact' ? 'active' : ''}`}>
+              <Link className="nav-link" to='/contact'>Contact</Link>
             </li>
-            <li className="nav-item">
-              {renderAuthButton()}
+            <li className={`nav-item ${location.pathname === '/login' ? 'active' : ''}`}>
+              <Link to="/login" className="nav-link">
+                Login
+              </Link>
+              {/* {renderAuthButton()} */}
             </li>
           </ul>
-
         </div>
       </div>
     </nav>
   );
 };
+
 
 export default NavBar;
