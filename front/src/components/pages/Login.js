@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
-import './Login.css'
+import './Login.css';
+import { useNavigate } from 'react-router-dom';
 import RegisterModal from './RegisterModal';
-
+import { useAuth } from '../../utils/AuthContext.js';
 
 const Login = () => {
   const [user, setUser] = useState("");
@@ -14,6 +15,9 @@ const Login = () => {
   //referencia para el focus()para el inicio de sesion
   const userRef = useRef(null);
   const passwordRef = useRef(null);
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   // Inicio de sesion
   const handleSubmit = async (event) => {
@@ -37,16 +41,18 @@ const Login = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          // 'Authorization': `Bearer ${token}`, // Agregar el token a la petición
         },
         body: JSON.stringify({ user, password }),
       });
 
       if (response.ok) {
         const data = await response.json();
+        login(data.token)
         setShowToast(true); // si todo va ok muestro el toast
         setTimeout(() => {
           setShowToast(false); // lo oculto despues de 2 segundos
-          window.location = '/';
+          navigate('/');
         }, 2000);
       } else {
         setShowErrorToast(true); // Mostrar el Toast de credenciales incorrectas

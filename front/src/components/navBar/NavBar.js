@@ -1,16 +1,23 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 import { useAuth } from '../../utils/AuthContext.js';
 
 const NavBar = () => {
   const location = useLocation();
   const { token, logout } = useAuth();
+  const navigate = useNavigate();
 
   const renderAuthButton = () => {
     if (token) {
       return (
-        <button onClick={logout} className="nav-link">
-          Disconnect
+        <button
+          onClick={() => {
+            logout();
+            navigate('/');
+          }}
+          className="nav-link"
+        >
+          Logout
         </button>
       );
     } else {
@@ -42,10 +49,10 @@ const NavBar = () => {
               <Link className="nav-link" to='/contact'>Contact</Link>
             </li>
             <li className={`nav-item ${location.pathname === '/login' ? 'active' : ''}`}>
-              <Link to="/login" className="nav-link">
+              {/* <Link to="/login" className="nav-link">
                 Login
-              </Link>
-              {/* {renderAuthButton()} */}
+              </Link> */}
+              {renderAuthButton()}
             </li>
           </ul>
         </div>
