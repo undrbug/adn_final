@@ -3,11 +3,12 @@ import './Login.css'
 import RegisterModal from './RegisterModal';
 
 
-const Login = () => {  
-  const [user, setUser] = useState("");  
+const Login = () => {
+  const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const [showModal, setShowModal] = useState(false)
+  const [showToast, setShowToast] = useState(false);
 
   //referencia para el focus()para el inicio de sesion
   const userRef = useRef(null);
@@ -41,8 +42,11 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(`que es data: ${data}`);
-        window.location = '/';
+        setShowToast(true); // si todo va ok muestro el toast
+        setTimeout(() => {
+          setShowToast(false); // lo oculto despues de 2 segundos
+          window.location = '/';
+        }, 2000);
       } else {
         const errorData = await response.json();
         console.error('Error en el inicio de sesión:', errorData.error);
@@ -109,7 +113,27 @@ const Login = () => {
       <RegisterModal
         showModal={showModal}
         handleCloseModal={handleCloseModal}
-      />      
+      />
+      {/* Toast para inicio de sesión correcto */}
+      <div
+        className={`toast align-items-center text-white bg-success ${showToast ? 'show' : ''}`}
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div className="d-flex">
+          <div className="toast-body">
+            ¡Inicio de sesión exitoso!
+          </div>
+          <button
+            type="button"
+            className="btn-close me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={() => setShowToast(false)}
+          ></button>
+        </div>
+      </div>
       <div className="dropdown-divider"></div>
     </div>
   )
