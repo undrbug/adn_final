@@ -26,6 +26,11 @@ const Home = () => {
   //Estado para filtro de pelicula
   const [searchTerm, setSearchTerm] = useState('');
 
+  //Estado para mostrar toast de eliminacion
+  const [showToast, setShowToast] = useState(false);
+  //Estado para mostrar toast de agregado
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+
   //Metodo para traer todas las peliculas
   const getMovies = async () => {
     try {
@@ -100,7 +105,11 @@ const Home = () => {
       }
       const addedMovie = await res.json();
       setMovies((prevMovie) => [...prevMovie, addedMovie]);
-      alert('Film added successfully!');
+      // Muestro el Toast de película agregada correctamente
+      setShowSuccessToast(true);
+      setTimeout(() => {
+        setShowSuccessToast(false); // Cierro el Toast después de 2 segundos
+      }, 2000);
       handleCloseModal(); //Cierro el modal despues de agregar la pelicula
 
     } catch (error) {
@@ -122,7 +131,12 @@ const Home = () => {
 
       // filtro las películas para eliminar la película con el ID
       setMovies((prevMovies) => prevMovies.filter((movie) => movie._id !== movieId));
-      alert('Film deleted successfully!');
+      //mensaje toast de eliminacion correcta
+      setShowToast(true); // si todo va ok muestro el toast
+
+      setTimeout(() => {
+        setShowToast(false); // lo oculto despues de 2 segundos
+      }, 2000);
     } catch (error) {
       console.error('Error deleting movie', error);
       alert('Error deleting movie');
@@ -296,6 +310,7 @@ const Home = () => {
                 className="btn btn-danger"
                 onClick={() => {
                   handleDeleteMovie(movieToDelete);
+                  setShowToast(true)
                   setShowDeleteModal(false);
                 }}
               >
@@ -304,8 +319,51 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </div>
 
+
+
+      </div>
+      {/* Toast para película agregada correctamente */}
+      <div
+        className={`toast align-items-center text-white bg-success ${showSuccessToast ? 'show' : ''} position-fixed top-50 start-50 translate-middle`}
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div className="d-flex">
+          <div className="toast-body">
+            ¡Película agregada correctamente!
+          </div>
+          <button
+            type="button"
+            className="btn-close me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={() => setShowSuccessToast(false)}
+          ></button>
+        </div>
+      </div>
+      
+      {/* Toast para eliminacion correcta */}
+      <div
+        className={`toast align-items-center text-white bg-success ${showToast ? 'show' : ''} position-fixed top-50 start-50 translate-middle`}
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div className="d-flex">
+          <div className="toast-body">
+            ¡Pelicula eliminada!
+          </div>
+          <button
+            type="button"
+            className="btn-close me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={() => setShowToast(false)}
+          ></button>
+        </div>
+      </div>
     </>
   );
 }

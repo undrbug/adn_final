@@ -9,6 +9,7 @@ const Login = () => {
 
   const [showModal, setShowModal] = useState(false)
   const [showToast, setShowToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
 
   //referencia para el focus()para el inicio de sesion
   const userRef = useRef(null);
@@ -48,9 +49,10 @@ const Login = () => {
           window.location = '/';
         }, 2000);
       } else {
-        const errorData = await response.json();
-        console.error('Error en el inicio de sesión:', errorData.error);
-        alert('Credenciales incorrectas')
+        setShowErrorToast(true); // Mostrar el Toast de credenciales incorrectas
+        setTimeout(() => {
+          setShowErrorToast(false); // Ocultar el Toast después de 2 segundos
+        }, 2000);
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -116,7 +118,7 @@ const Login = () => {
       />
       {/* Toast para inicio de sesión correcto */}
       <div
-        className={`toast align-items-center text-white bg-success ${showToast ? 'show' : ''}`}
+        className={`toast align-items-center text-white bg-success ${showToast ? 'show' : ''} position-fixed top-50 start-50 translate-middle`}
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
@@ -134,6 +136,26 @@ const Login = () => {
           ></button>
         </div>
       </div>
+
+      {/* Toast para credenciales incorrectas */}
+      <div
+        className={`toast align-items-center text-white bg-danger ${showErrorToast ? 'show' : ''} position-fixed top-50 start-50 translate-middle`}
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div className="d-flex">
+          <div className="toast-body">¡Credenciales incorrectas!</div>
+          <button
+            type="button"
+            className="btn-close me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+            onClick={() => setShowErrorToast(false)}
+          ></button>
+        </div>
+      </div>
+
       <div className="dropdown-divider"></div>
     </div>
   )
